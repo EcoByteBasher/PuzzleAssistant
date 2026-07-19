@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crossword Assistant</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <style>
+:root{
+  --bg:#0f1226;
+  --card:#151a34;
+  --text:#ecf0ff;
+  --muted:#a9b0d3;
+  --accent:linear-gradient(90deg,#ff005e,#ff8a00,#ffd400,#4cd964,#0fd3ff,#6c4cff,#ff00ff);
+  --danger:#ff476f;
+  --ok:#21d07a;
+  --border:rgba(255,255,255,.12);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+
+  --wordle-grey:#787c7e;
+  --wordle-yellow:#c9b458;
+  --wordle-green:#6aaa64;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  height:100%;
+}
+
+body{
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--bg);
+  color:var(--text);
+  font-family:sans-serif;
+}
+
+main{
+  padding:2rem;
+  max-width:760px;
+  width:95%;
+  background:var(--card);
+  border-radius:1rem;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+h1{
+  margin:0 0 .5rem;
+  text-align:center;
+}
+
+.subtitle{
+  margin:0 0 1rem;
+  text-align:center;
+  color:var(--muted);
+}
+
+.app-version{
+  font-size:.9em;
+  margin-bottom:10px;
+  text-align:center;
+  color:orange;
+}
+
+/* ---------- MODE SELECTOR ---------- */
+
+.toggle-wrapper{
+  display:flex;
+  justify-content:center;
+  width:100%;
+  margin-bottom:1rem;
+}
+
+.modebar{
+  display:flex;
+  width:420px;
+  border:1px solid var(--border);
+  border-radius:30px;
+  overflow:hidden;
+  background:var(--card);
+}
+
+.modebar input{
+  display:none;
+}
+
+.modebar label{
+  flex:1;
+  text-align:center;
+  padding:.8rem;
+  cursor:pointer;
+  user-select:none;
+  color:var(--muted);
+  transition:.2s;
+}
+
+.modebar input:checked+label{
+  background:linear-gradient(90deg,#ff005e,#ff8a00,#ffd400,#4cd964,#0fd3ff,#6c4cff,#ff00ff);
+  color:white;
+}
+
+/* ---------- STANDARD INPUT ---------- */
+
+#normalControls{
+  width:100%;
+}
+
+input[type=text]{
+  font-size:1.5rem;
+  padding:.5rem;
+  letter-spacing:.2rem;
+  text-transform:uppercase;
+  border-radius:.5rem;
+  border:1px solid var(--border);
+  width:100%;
+  text-align:center;
+}
+
+input.valid{
+  border-color:var(--ok);
+  color:var(--ok);
+}
+
+input.invalid{
+  border-color:var(--danger);
+  color:var(--danger);
+}
+
+.hint{
+  margin:.5rem 0 0;
+  color:var(--muted);
+  font-size:.9rem;
+  text-align:center;
+}
+
+/* ---------- LETTER CHIPS ---------- */
+
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin:.6rem 0;
+}
+
+.chip{
+  width:2rem;
+  height:2rem;
+  margin:.15rem;
+  border-radius:.25rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  background:var(--border);
+}
+
+.chip.letter{
+  background:var(--ok);
+  color:white;
+}
+
+.chip.wild{
+  background:var(--danger);
+  color:white;
+}
+
+/* ---------- WORDLE ---------- */
+
+#wordlePanel{
+  display:none;
+  margin-top:10px;
+}
+
+.wordleGrid{
+  display:grid;
+  grid-template-columns:repeat(5,56px);
+  gap:6px;
+  justify-content:center;
+}
+
+.wordleCell{
+  width:56px;
+  height:56px;
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  text-transform:uppercase;
+  border-radius:6px;
+  border:2px solid #555;
+  color:white;
+  background:var(--wordle-grey);
+}
+
+.wordleCell.grey{
+  background:var(--wordle-grey);
+}
+
+.wordleCell.yellow{
+  background:var(--wordle-yellow);
+}
+
+.wordleCell.green{
+  background:var(--wordle-green);
+}
+
+/* ---------- BUTTON ---------- */
+
+button{
+  padding:.75rem 1.5rem;
+  margin-top:1rem;
+  font-size:1rem;
+  border:none;
+  border-radius:.5rem;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+}
+
+/* ---------- RESULTS ---------- */
+
+.results{
+  margin-top:1.5rem;
+  width:100%;
+  max-height:320px;
+  overflow-y:auto;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:.5rem;
+  padding:1rem;
+}
+
+.resultsHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:.5rem;
+}
+
+ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+li{
+  padding:.25rem 0;
+  border-bottom:1px solid var(--border);
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <h1>Crossword Assistant</h1>
+
+  <div id="app-version" class="app-version"></div>
+
+  <p class="subtitle">
+    Switch between Anagram, Word Finder and Wordle modes.
+  </p>
+
+  <!-- ========================= -->
+  <!-- MODE SELECTOR             -->
+  <!-- ========================= -->
+
+  <div class="toggle-wrapper">
+
+    <div class="modebar">
+
+      <input
+        type="radio"
+        id="anagram"
+        name="mode"
+        value="anagram"
+        checked>
+
+      <label for="anagram">
+        Anagram
+      </label>
+
+      <input
+        type="radio"
+        id="finder"
+        name="mode"
+        value="finder">
+
+      <label for="finder">
+        Word Finder
+      </label>
+
+      <input
+        type="radio"
+        id="wordle"
+        name="mode"
+        value="wordle">
+
+      <label for="wordle">
+        Wordle
+      </label>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- EXISTING INPUT CONTROLS   -->
+  <!-- ========================= -->
+
+  <div id="normalControls">
+
+    <input
+      id="letters"
+      type="text"
+      maxlength="15"
+      placeholder="Enter letters..."
+      autocomplete="off"
+      autocapitalize="characters"
+      spellcheck="false">
+
+    <div
+      class="chips"
+      id="chips">
+    </div>
+
+    <p
+      id="hint"
+      class="hint">
+    </p>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- WORDLE PANEL              -->
+  <!-- ========================= -->
+
+  <div id="wordlePanel">
+
+    <div
+      id="wordleGrid"
+      class="wordleGrid">
+
+    </div>
+
+    <p class="hint">
+      Enter each guess exactly as played.<br>
+      Double-click (or double-tap) squares to cycle
+      Grey → Yellow → Green.
+    </p>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- SOLVE BUTTON              -->
+  <!-- ========================= -->
+
+  <button
+    id="solve"
+    disabled>
+
+    Solve
+
+  </button>
+
+
+  <!-- ========================= -->
+  <!-- RESULTS                   -->
+  <!-- ========================= -->
+
+  <div
+    class="results"
+    id="results"
+    aria-live="polite">
+
+    <div class="resultsHeader">
+
+      <strong>Results</strong>
+
+      <span id="count">
+        0
+      </span>
+
+    </div>
+
+    <ul id="list"></ul>
+
+  </div>
+
+</main>
+
