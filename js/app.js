@@ -25,43 +25,6 @@
         return document.querySelector('input[name="mode"]:checked').value;
       }
 
-      function clearResults(){
-        list.innerHTML = '';
-        count.textContent = '0';
-      }
-
-      function renderChips(value, mode){
-        chips.innerHTML = '';
-        for(let i=0;i<value.length;i++){
-          const c = document.createElement('div');
-          if(mode==='finder'){
-            if(value[i] === '?'){ c.className='chip wild'; c.textContent='?'; }
-            else { c.className='chip letter'; c.textContent=value[i]; }
-          }else{
-            c.className='chip letter';
-            c.textContent=value[i];
-          }
-          chips.appendChild(c);
-        }
-      }
-
-      function sanitizeAnagram(str){
-        const letters = (str.match(/[a-z]/gi) || []).join('').toUpperCase();
-        return letters.slice(0, 15);
-      }
-
-      function sanitizeFinder(str){
-        const up = str.toUpperCase();
-        let out = '';
-        for(const ch of up){
-          if(/[A-Z]/.test(ch)) out += ch;
-          else if(ch === ' ' || ch === '?') out += '?';
-          else continue;
-          if(out.length >= 15) break;
-        }
-        return out;
-      }
-
       function updateHint(){
         const mode = getMode();
         hint.textContent =
@@ -88,35 +51,13 @@
 
       function updateUI(){
         const mode = getMode();
-        renderChips(input.value, mode);
+        UI.renderChips(input.value, mode);
         setValidityAndButton();
-      }
-
-      function signature(str){
-        return str.split('').sort().join('');
-      }
-
-      function renderResults(words){
-        list.innerHTML = '';
-        if(!words || words.length === 0){
-          count.textContent = '0';
-          const li = document.createElement('li');
-          li.textContent = 'No matches found';
-          list.appendChild(li);
-          return;
-        }
-        const uniq = Array.from(new Set(words)).sort((a,b)=>a.localeCompare(b));
-        count.textContent = String(uniq.length);
-        for(const w of uniq){
-          const li = document.createElement('li');
-          li.textContent = w;
-          list.appendChild(li);
-        }
       }
 
       input.addEventListener('input', ()=>{
         const mode = getMode();
-        const cleaned = (mode==='anagram') ? sanitizeAnagram(input.value) : sanitizeFinder(input.value);
+        const cleaned = (mode==='anagram') ? Anagram.sanitize(input.value) : Finder.sanitize(input.value);
         if(cleaned !== input.value) input.value = cleaned;
         updateUI();
       });
@@ -135,14 +76,14 @@
         const val = input.value;
 
         if(mode === 'anagram'){
-          const sig = signature(val);
+          const sig = Anagram.signature(val);
           const matches = (window.DICTIONARYMAP && window.DICTIONARYMAP[sig]) ? window.DICTIONARYMAP[sig] : [];
-          renderResults(matches);
+          UI.renderResults(matches);
         } else {
           const regex = new RegExp('^' + val.replace(/\?/g, '.') + '$', 'i');
           const words = Array.isArray(window.DICTIONARY) ? window.DICTIONARY : [];
           const matches = words.filter(w => regex.test(w));
-          renderResults(matches);
+          UI.renderResults(matches);
         }
 
         results.setAttribute('aria-busy','false');
@@ -152,7 +93,7 @@
       modeRadios.forEach(radio=>{
         radio.addEventListener('change', ()=>{
           input.value = '';
-          clearResults();
+          UI.clearResults();
           updateHint();
           updateUI();
         });
