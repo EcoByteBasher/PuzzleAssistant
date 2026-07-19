@@ -6,400 +6,223 @@
   <title>Crossword Assistant</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon-192.png" type="image/png">
-  <style>
-:root{
-  --bg:#0f1226;
-  --card:#151a34;
-  --text:#ecf0ff;
-  --muted:#a9b0d3;
-  --accent:linear-gradient(90deg,#ff005e,#ff8a00,#ffd400,#4cd964,#0fd3ff,#6c4cff,#ff00ff);
-  --danger:#ff476f;
-  --ok:#21d07a;
-  --border:rgba(255,255,255,.12);
-  --shadow:0 10px 30px rgba(0,0,0,.35);
-
-  --wordle-grey:#787c7e;
-  --wordle-yellow:#c9b458;
-  --wordle-green:#6aaa64;
-}
-
-*{box-sizing:border-box}
-
-html,body{
-  height:100%;
-}
-
-body{
-  margin:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--bg);
-  color:var(--text);
-  font-family:sans-serif;
-}
-
-main{
-  padding:2rem;
-  max-width:760px;
-  width:95%;
-  background:var(--card);
-  border-radius:1rem;
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-
-h1{
-  margin:0 0 .5rem;
-  text-align:center;
-}
-
-.subtitle{
-  margin:0 0 1rem;
-  text-align:center;
-  color:var(--muted);
-}
-
-.app-version{
-  font-size:.9em;
-  margin-bottom:10px;
-  text-align:center;
-  color:orange;
-}
-
-/* ---------- MODE SELECTOR ---------- */
-
-.toggle-wrapper{
-  display:flex;
-  justify-content:center;
-  width:100%;
-  margin-bottom:1rem;
-}
-
-.modebar{
-  display:flex;
-  width:420px;
-  border:1px solid var(--border);
-  border-radius:30px;
-  overflow:hidden;
-  background:var(--card);
-}
-
-.modebar input{
-  display:none;
-}
-
-.modebar label{
-  flex:1;
-  text-align:center;
-  padding:.8rem;
-  cursor:pointer;
-  user-select:none;
-  color:var(--muted);
-  transition:.2s;
-}
-
-.modebar input:checked+label{
-  background:linear-gradient(90deg,#ff005e,#ff8a00,#ffd400,#4cd964,#0fd3ff,#6c4cff,#ff00ff);
-  color:white;
-}
-
-/* ---------- STANDARD INPUT ---------- */
-
-#normalControls{
-  width:100%;
-}
-
-input[type=text]{
-  font-size:1.5rem;
-  padding:.5rem;
-  letter-spacing:.2rem;
-  text-transform:uppercase;
-  border-radius:.5rem;
-  border:1px solid var(--border);
-  width:100%;
-  text-align:center;
-}
-
-input.valid{
-  border-color:var(--ok);
-  color:var(--ok);
-}
-
-input.invalid{
-  border-color:var(--danger);
-  color:var(--danger);
-}
-
-.hint{
-  margin:.5rem 0 0;
-  color:var(--muted);
-  font-size:.9rem;
-  text-align:center;
-}
-
-/* ---------- LETTER CHIPS ---------- */
-
-.chips{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin:.6rem 0;
-}
-
-.chip{
-  width:2rem;
-  height:2rem;
-  margin:.15rem;
-  border-radius:.25rem;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  background:var(--border);
-}
-
-.chip.letter{
-  background:var(--ok);
-  color:white;
-}
-
-.chip.wild{
-  background:var(--danger);
-  color:white;
-}
-
-/* ---------- WORDLE ---------- */
-
-#wordlePanel{
-  display:none;
-  margin-top:10px;
-}
-
-.wordleGrid{
-  display:grid;
-  grid-template-columns:repeat(5,56px);
-  gap:6px;
-  justify-content:center;
-}
-
-.wordleCell{
-  width:56px;
-  height:56px;
-  text-align:center;
-  font-size:28px;
-  font-weight:bold;
-  text-transform:uppercase;
-  border-radius:6px;
-  border:2px solid #555;
-  color:white;
-  background:var(--wordle-grey);
-}
-
-.wordleCell.grey{
-  background:var(--wordle-grey);
-}
-
-.wordleCell.yellow{
-  background:var(--wordle-yellow);
-}
-
-.wordleCell.green{
-  background:var(--wordle-green);
-}
-
-/* ---------- BUTTON ---------- */
-
-button{
-  padding:.75rem 1.5rem;
-  margin-top:1rem;
-  font-size:1rem;
-  border:none;
-  border-radius:.5rem;
-  background:var(--accent);
-  color:white;
-  cursor:pointer;
-}
-
-button:disabled{
-  opacity:.4;
-  cursor:not-allowed;
-}
-
-/* ---------- RESULTS ---------- */
-
-.results{
-  margin-top:1.5rem;
-  width:100%;
-  max-height:320px;
-  overflow-y:auto;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:.5rem;
-  padding:1rem;
-}
-
-.resultsHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:.5rem;
-}
-
-ul{
-  list-style:none;
-  padding:0;
-  margin:0;
-}
-
-li{
-  padding:.25rem 0;
-  border-bottom:1px solid var(--border);
-}
-
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main>
+  <main>
+    <h1>Crossword Assistant</h1>
 
-  <h1>Crossword Assistant</h1>
+    <!-- App version -->
+    <div id="app-version" class="app-version"></div>
 
-  <div id="app-version" class="app-version"></div>
+    <p class="subtitle">Switch between modes to solve anagrams or find words with missing letters.</p>
 
-  <p class="subtitle">
-    Switch between Anagram, Word Finder and Wordle modes.
-  </p>
-
-  <!-- ========================= -->
-  <!-- MODE SELECTOR             -->
-  <!-- ========================= -->
-
-  <div class="toggle-wrapper">
-
-    <div class="modebar">
-
-      <input
-        type="radio"
-        id="anagram"
-        name="mode"
-        value="anagram"
-        checked>
-
-      <label for="anagram">
-        Anagram
-      </label>
-
-      <input
-        type="radio"
-        id="finder"
-        name="mode"
-        value="finder">
-
-      <label for="finder">
-        Word Finder
-      </label>
-
-      <input
-        type="radio"
-        id="wordle"
-        name="mode"
-        value="wordle">
-
-      <label for="wordle">
-        Wordle
-      </label>
-
+    <!-- Fancy toggle -->
+    <div class="toggle-wrapper">
+      <div class="toggle">
+        <input type="radio" name="mode" id="anagram" value="anagram" checked>
+        <label for="anagram">Anagram</label>
+        <input type="radio" name="mode" id="finder" value="finder">
+        <label for="finder">Word Finder</label>
+        <div class="slider"></div>
+      </div>
     </div>
-
-  </div>
-
-
-  <!-- ========================= -->
-  <!-- EXISTING INPUT CONTROLS   -->
-  <!-- ========================= -->
-
-  <div id="normalControls">
 
     <input
-      id="letters"
-      type="text"
-      maxlength="15"
+      id="letters" type="text" maxlength="15"
       placeholder="Enter letters..."
-      autocomplete="off"
-      autocapitalize="characters"
-      spellcheck="false">
+      aria-label="Input"
+      autocomplete="off" autocapitalize="characters" spellcheck="false"
+    >
+    <div class="chips" id="chips"></div>
+    <p id="hint" class="hint"></p>
 
-    <div
-      class="chips"
-      id="chips">
+    <button id="solve" disabled>Solve</button>
+
+    <div class="results" id="results" aria-live="polite">
+      <div class="resultsHeader"><strong>Results</strong> <span id="count">0</span></div>
+      <ul id="list"></ul>
     </div>
+  </main>
 
-    <p
-      id="hint"
-      class="hint">
-    </p>
+  <!-- Dictionaries -->
+  <script src="dictionarymap.js"></script>
+  <script src="dictionarylist.js"></script>
 
-  </div>
+  <script>
+    let appVersion = 'unknown';
 
+    // Load version from manifest
+    fetch('manifest.json')
+      .then(res => res.json())
+      .then(manifest => {
+        appVersion = manifest.version || 'unknown';
+        document.getElementById('app-version').textContent = `v${appVersion}`;
+      })
+      .catch(() => {
+        document.getElementById('app-version').textContent = `(${appVersion})`;
+      });
 
-  <!-- ========================= -->
-  <!-- WORDLE PANEL              -->
-  <!-- ========================= -->
+    (function(){
+      const input = document.getElementById('letters');
+      const button = document.getElementById('solve');
+      const list = document.getElementById('list');
+      const count = document.getElementById('count');
+      const chips = document.getElementById('chips');
+      const results = document.getElementById('results');
+      const modeRadios = document.querySelectorAll('input[name="mode"]');
+      const hint = document.getElementById('hint');
 
-  <div id="wordlePanel">
+      function getMode(){
+        return document.querySelector('input[name="mode"]:checked').value;
+      }
 
-    <div
-      id="wordleGrid"
-      class="wordleGrid">
+      function clearResults(){
+        list.innerHTML = '';
+        count.textContent = '0';
+      }
 
-    </div>
+      function renderChips(value, mode){
+        chips.innerHTML = '';
+        for(let i=0;i<value.length;i++){
+          const c = document.createElement('div');
+          if(mode==='finder'){
+            if(value[i] === '?'){ c.className='chip wild'; c.textContent='?'; }
+            else { c.className='chip letter'; c.textContent=value[i]; }
+          }else{
+            c.className='chip letter';
+            c.textContent=value[i];
+          }
+          chips.appendChild(c);
+        }
+      }
 
-    <p class="hint">
-      Enter each guess exactly as played.<br>
-      Double-click (or double-tap) squares to cycle
-      Grey → Yellow → Green.
-    </p>
+      function sanitizeAnagram(str){
+        const letters = (str.match(/[a-z]/gi) || []).join('').toUpperCase();
+        return letters.slice(0, 15);
+      }
 
-  </div>
+      function sanitizeFinder(str){
+        const up = str.toUpperCase();
+        let out = '';
+        for(const ch of up){
+          if(/[A-Z]/.test(ch)) out += ch;
+          else if(ch === ' ' || ch === '?') out += '?';
+          else continue;
+          if(out.length >= 15) break;
+        }
+        return out;
+      }
 
+      function updateHint(){
+        const mode = getMode();
+        hint.textContent =
+          (mode === 'anagram')
+            ? 'Anagram: enter 3–15 letters. Solve enables at 3+ letters.'
+            : 'Word Finder: ENTER LETTERS, or SPACE for wildcard “?”. Solve enables once a wildcard is present.';
+      }
 
-  <!-- ========================= -->
-  <!-- SOLVE BUTTON              -->
-  <!-- ========================= -->
+      function setValidityAndButton(){
+        const mode = getMode();
+        const val = input.value;
+        let valid = false;
 
-  <button
-    id="solve"
-    disabled>
+        if(mode === 'anagram'){
+          valid = (val.length >= 3);
+        } else {
+          valid = (val.includes('?')); // no minimum letters, just at least one wildcard
+        }
 
-    Solve
+        input.classList.toggle('valid', valid);
+        input.classList.toggle('invalid', !valid && val.length > 0);
+        button.disabled = !valid;
+      }
 
-  </button>
+      function updateUI(){
+        const mode = getMode();
+        renderChips(input.value, mode);
+        setValidityAndButton();
+      }
 
+      function signature(str){
+        return str.split('').sort().join('');
+      }
 
-  <!-- ========================= -->
-  <!-- RESULTS                   -->
-  <!-- ========================= -->
+      function renderResults(words){
+        list.innerHTML = '';
+        if(!words || words.length === 0){
+          count.textContent = '0';
+          const li = document.createElement('li');
+          li.textContent = 'No matches found';
+          list.appendChild(li);
+          return;
+        }
+        const uniq = Array.from(new Set(words)).sort((a,b)=>a.localeCompare(b));
+        count.textContent = String(uniq.length);
+        for(const w of uniq){
+          const li = document.createElement('li');
+          li.textContent = w;
+          list.appendChild(li);
+        }
+      }
 
-  <div
-    class="results"
-    id="results"
-    aria-live="polite">
+      input.addEventListener('input', ()=>{
+        const mode = getMode();
+        const cleaned = (mode==='anagram') ? sanitizeAnagram(input.value) : sanitizeFinder(input.value);
+        if(cleaned !== input.value) input.value = cleaned;
+        updateUI();
+      });
 
-    <div class="resultsHeader">
+      input.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' && !button.disabled){
+          e.preventDefault();
+          button.click();
+        }
+      });
 
-      <strong>Results</strong>
+      button.addEventListener('click', ()=>{
+        if(button.disabled) return;
+        results.setAttribute('aria-busy','true');
+        const mode = getMode();
+        const val = input.value;
 
-      <span id="count">
-        0
-      </span>
+        if(mode === 'anagram'){
+          const sig = signature(val);
+          const matches = (window.DICTIONARYMAP && window.DICTIONARYMAP[sig]) ? window.DICTIONARYMAP[sig] : [];
+          renderResults(matches);
+        } else {
+          const regex = new RegExp('^' + val.replace(/\?/g, '.') + '$', 'i');
+          const words = Array.isArray(window.DICTIONARY) ? window.DICTIONARY : [];
+          const matches = words.filter(w => regex.test(w));
+          renderResults(matches);
+        }
 
-    </div>
+        results.setAttribute('aria-busy','false');
+        setValidityAndButton();
+      });
 
-    <ul id="list"></ul>
+      modeRadios.forEach(radio=>{
+        radio.addEventListener('change', ()=>{
+          input.value = '';
+          clearResults();
+          updateHint();
+          updateUI();
+        });
+      });
 
-  </div>
-
-</main>
+      // init
+      updateHint();
+      input.value = '';
+      updateUI();
+    })();
+  </script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("Service worker registered"))
+        .catch(err => console.error("SW registration failed:", err));
+    }
+  </script>
+</body>
+</html>
 
