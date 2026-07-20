@@ -267,11 +267,6 @@ function previousCell(cell) {
     return cell.previousElementSibling;
 }
 
-console.log(scoreGuess("CRANE", "CRANE"));
-console.log(scoreGuess("CRANE", "SLATE"));
-console.log(scoreGuess("SHEEP", "PRESS"));
-console.log(scoreGuess("ALLEY", "APPLE"));
-
 window.Wordle = {
     createGrid,
     getGrid,
