@@ -51,6 +51,30 @@ function createGrid() {
     }
 }
 
+function getGrid() {
+
+    const rows = [];
+
+    const cells = document.querySelectorAll(".wordleCell");
+
+    for (let row = 0; row < 6; row++) {
+
+        const guess = [];
+
+        for (let col = 0; col < 5; col++) {
+
+            const cell = cells[row * 5 + col];
+
+            guess.push({
+                letter: cell.value,
+                state: Number(cell.dataset.state)
+            });
+        }
+        rows.push(guess);
+    }
+    return rows;
+}
+
 function handleInput(event) {
 
     const cell = event.target;
@@ -153,5 +177,6 @@ function previousCell(cell) {
 }
 
 window.Wordle = {
-    createGrid
+    createGrid,
+    getGrid
 };
