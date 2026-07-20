@@ -54,6 +54,11 @@ function showCurrentMode() {
     input.style.display        = wordle ? "none" : "";
     chips.style.display        = wordle ? "none" : "";
     wordlePanel.style.display  = wordle ? "block" : "none";
+
+    const first = document.querySelector(".wordleCell");
+
+    if (first)
+        first.focus();
 }
 
       function setValidityAndButton(){

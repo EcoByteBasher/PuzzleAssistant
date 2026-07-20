@@ -8,6 +8,11 @@
  *
  ******************************************************************************/
 
+let lastClickedCell = null;
+let lastClickTime = 0;
+
+const DOUBLE_CLICK_MS = 350;
+
 function createGrid() {
 
     const grid = document.getElementById("wordleGrid");
@@ -24,12 +29,13 @@ function createGrid() {
 
             cell.type = "text";
             cell.maxLength = 1;
+            cell.inputMode = "text";
 
             cell.className = "wordleCell grey";
 
             cell.dataset.row = row;
             cell.dataset.col = col;
-            cell.dataset.state = "grey";
+            cell.dataset.state = 0; // 0=grey, 1=yellow, 2=green
 
             cell.autocomplete = "off";
             cell.autocorrect = "off";
@@ -38,6 +44,7 @@ function createGrid() {
 
             cell.addEventListener("input", handleInput);
             cell.addEventListener("keydown", handleKeyDown);
+            cell.addEventListener("click", handleClick);
 
             grid.appendChild(cell);
         }
@@ -55,8 +62,15 @@ function handleInput(event) {
 
     cell.value = value;
 
-    if (value === "")
+    if (value === "") {
+
+        cell.dataset.state = 0;
+
+        cell.classList.remove("yellow", "green");
+        cell.classList.add("grey");
+
         return;
+    }
 
     const next = nextCell(cell);
 
@@ -86,6 +100,43 @@ function handleKeyDown(event) {
             }
             break;
     }
+}
+
+function handleClick(event) {
+
+    const cell = event.target;
+    const now = Date.now();
+
+    if (cell === lastClickedCell &&
+        now - lastClickTime < DOUBLE_CLICK_MS) {
+
+        cycleColour(cell);
+
+        lastClickedCell = null;
+        lastClickTime = 0;
+
+        return;
+    }
+
+    lastClickedCell = cell;
+    lastClickTime = now;
+}
+
+function cycleColour(cell) {
+
+    const colours = ["grey", "yellow", "green"];
+
+    let state = Number(cell.dataset.state);
+
+    if (cell.value === "") // disallow colouring an empty cell
+        return;
+
+    state = (state + 1) % colours.length;
+
+    cell.dataset.state = state;
+
+    cell.classList.remove("grey", "yellow", "green");
+    cell.classList.add(colours[state]);
 }
 
 /*
