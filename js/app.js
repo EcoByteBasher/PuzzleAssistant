@@ -20,18 +20,56 @@
       const results = document.getElementById('results');
       const modeRadios = document.querySelectorAll('input[name="mode"]');
       const hint = document.getElementById('hint');
+      const wordlePanel = document.getElementById('wordlePanel');
 
       function getMode(){
         return document.querySelector('input[name="mode"]:checked').value;
       }
 
-      function updateHint(){
-        const mode = getMode();
-        hint.textContent =
-          (mode === 'anagram')
-            ? 'Anagram: enter 3–15 letters. Solve enables at 3+ letters.'
-            : 'Word Finder: ENTER LETTERS, or SPACE for wildcard “?”. Solve enables once a wildcard is present.';
-      }
+function updateHint(){
+
+    switch(getMode()){
+
+        case "anagram":
+            hint.textContent =
+                "Anagram: enter 3–15 letters. Solve enables at 3+ letters.";
+            break;
+
+        case "finder":
+            hint.textContent =
+                "Word Finder: ENTER LETTERS, or SPACE for wildcard '?'.";
+            break;
+
+        case "wordle":
+            hint.textContent =
+                "Enter your guesses, then double-click squares to change Grey → Yellow → Green.";
+            break;
+    }
+}
+
+function updateModeUI(){
+
+    const wordle = getMode() === "wordle";
+
+    input.style.display = wordle ? "none" : "";
+    chips.style.display = wordle ? "none" : "";
+    wordlePanel.style.display = wordle ? "" : "none";
+
+    if(wordle){
+
+        button.disabled = false;
+
+        const first =
+            document.querySelector(".wordleCell");
+
+        if(first) first.focus();
+
+    }else{
+
+        updateUI();
+
+    }
+}
 
       function setValidityAndButton(){
         const mode = getMode();
@@ -95,13 +133,14 @@
           input.value = '';
           UI.clearResults();
           updateHint();
-          updateUI();
+          updateModeUI();
         });
       });
 
       // init
+      Wordle.createGrid();
       updateHint();
       input.value = '';
-      updateUI();
+      updateModeUI();
     })();
 

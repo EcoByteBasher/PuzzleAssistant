@@ -24,6 +24,8 @@
         <label for="anagram">Anagram</label>
         <input type="radio" name="mode" id="finder" value="finder">
         <label for="finder">Word Finder</label>
+        <input type="radio" name="mode" id="wordle" value="wordle">
+        <label for="wordle">Wordle</label>
         <div class="slider"></div>
       </div>
     </div>
@@ -36,6 +38,10 @@
     >
     <div class="chips" id="chips"></div>
     <p id="hint" class="hint"></p>
+
+    <div id="wordlePanel" style="display:none">
+        <div id="wordleGrid" class="wordleGrid"></div>
+    </div>
 
     <button id="solve" disabled>Solve</button>
 
