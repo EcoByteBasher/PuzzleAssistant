@@ -166,6 +166,27 @@ function scoreGuess(guess, answer) {
     return score;
 }
 
+function canSolve() { // Determine if the Solve button should be enabled or not
+
+    const cells = document.querySelectorAll(".wordleCell");
+
+    for (let row = 0; row < 6; row++) {
+
+        let complete = true;
+
+        for (let col = 0; col < 5; col++) {
+
+            if (cells[row * 5 + col].value === "") {
+                complete = false;
+                break;
+            }
+        }
+        if (complete)
+            return true;
+    }
+    return false;
+}
+
 function handleInput(event) {
 
     const cell = event.target;
@@ -180,10 +201,8 @@ function handleInput(event) {
     if (value === "") {
 
         cell.dataset.state = 0;
-
         cell.classList.remove("yellow", "green");
         cell.classList.add("grey");
-
         return;
     }
 
@@ -271,5 +290,6 @@ window.Wordle = {
     createGrid,
     getGrid,
     scoreGuess,
-    solve
+    solve,
+    canSolve
 };

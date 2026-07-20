@@ -62,6 +62,13 @@ function showCurrentMode() {
 }
 
       function setValidityAndButton(){
+
+        if (getMode() === "wordle") {
+
+          button.disabled = !Wordle.canSolve();
+          return;
+        }
+
         const mode = getMode();
         const val = input.value;
         let valid = false;
@@ -105,22 +112,23 @@ function showCurrentMode() {
 
         switch (mode) {
 
-          case "anagram":
+          case "anagram": {
             const sig = Anagram.signature(val);
-            const matchesA = (window.DICTIONARYMAP && window.DICTIONARYMAP[sig]) ? window.DICTIONARYMAP[sig] : [];
-            UI.renderResults(matchesA);
+            const matches = (window.DICTIONARYMAP && window.DICTIONARYMAP[sig]) ? window.DICTIONARYMAP[sig] : [];
+            UI.renderResults(matches);
             break;
-
-          case "finder":
+          }
+          case "finder": {
             const regex = new RegExp('^' + val.replace(/\?/g, '.') + '$', 'i');
             const words = Array.isArray(window.DICTIONARY) ? window.DICTIONARY : [];
-            const matchesF = words.filter(w => regex.test(w));
-            UI.renderResults(matchesF);
+            const matches = words.filter(w => regex.test(w));
+            UI.renderResults(matches);
             break;
-
-          case "wordle":
+          }
+          case "wordle": {
             UI.renderResults(Wordle.solve());
             break;
+          }
         }
 
         results.setAttribute('aria-busy','false');
@@ -138,6 +146,9 @@ function showCurrentMode() {
 
       // init
       Wordle.createGrid();
+      document.querySelectorAll(".wordleCell").forEach(cell => {
+          cell.addEventListener("input", setValidityAndButton);
+      });
       showCurrentMode();
       updateHint();
       input.value = '';
