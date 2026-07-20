@@ -54,25 +54,116 @@ function createGrid() {
 function getGrid() {
 
     const rows = [];
-
     const cells = document.querySelectorAll(".wordleCell");
 
     for (let row = 0; row < 6; row++) {
 
-        const guess = [];
+        let guess = "";
+        let complete = true;
+        const score = [];
 
         for (let col = 0; col < 5; col++) {
 
             const cell = cells[row * 5 + col];
 
-            guess.push({
-                letter: cell.value,
-                state: Number(cell.dataset.state)
-            });
+            if (cell.value === "") // Discard empty or incomplete rows
+                complete = false;
+
+            guess += cell.value.toUpperCase();
+            score.push(Number(cell.dataset.state));
         }
-        rows.push(guess);
+        if (complete)
+            rows.push({ guess, score });
     }
     return rows;
+}
+
+/*
+  "For every entered guess, would this candidate produce exactly the same colours?
+   If not, discard it."
+
+   That's Wordle in a nutshell!
+*/
+function matchesGrid(candidate, grid) {
+
+    for (const row of grid) {
+
+        const actual = scoreGuess(row.guess, candidate);
+
+        for (let i = 0; i < 5; i++) {
+
+            if (actual[i] !== row.score[i])
+                return false;
+        }
+    }
+    return true;
+}
+
+function solve() {
+
+    const grid = getGrid();
+
+    const results = [];
+
+    for (const word of dictionaryList) {
+
+        if (word.length !== 5)
+            continue;
+
+        if (matchesGrid(word, grid))
+            results.push(word);
+    }
+    return results;
+}
+
+/******************************************************************************
+ *
+ * Returns the Wordle score for a guess against a candidate answer.
+ *
+ * 0 = grey
+ * 1 = yellow
+ * 2 = green
+ *
+ ******************************************************************************/
+
+function scoreGuess(guess, answer) {
+
+    guess = guess.toUpperCase();
+    answer = answer.toUpperCase();
+
+    const score = [0, 0, 0, 0, 0];
+    const used = [false, false, false, false, false];
+
+    // Pass 1 - Greens
+    for (let i = 0; i < 5; i++) {
+
+        if (guess[i] === answer[i]) {
+
+            score[i] = 2;
+            used[i] = true;
+        }
+    }
+
+    // Pass 2 - Yellows
+    for (let i = 0; i < 5; i++) {
+
+        if (score[i] !== 0)
+            continue;
+
+        for (let j = 0; j < 5; j++) {
+
+            if (used[j])
+                continue;
+
+            if (guess[i] !== answer[j])
+                continue;
+
+            score[i] = 1;
+            used[j] = true;
+            break;
+        }
+    }
+    return score;
 }
 
 function handleInput(event) {
@@ -176,7 +267,13 @@ function previousCell(cell) {
     return cell.previousElementSibling;
 }
 
+console.log(scoreGuess("CRANE", "CRANE"));
+console.log(scoreGuess("CRANE", "SLATE"));
+console.log(scoreGuess("SHEEP", "PRESS"));
+console.log(scoreGuess("ALLEY", "APPLE"));
+
 window.Wordle = {
     createGrid,
-    getGrid
+    getGrid,
+    scoreGuess
 };
