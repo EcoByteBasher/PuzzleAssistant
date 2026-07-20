@@ -105,7 +105,7 @@ function solve() {
 
     const results = [];
 
-    for (const word of dictionaryList) {
+    for (const word of window.DICTIONARY) {
 
         if (word.length !== 5)
             continue;
@@ -113,7 +113,7 @@ function solve() {
         if (matchesGrid(word, grid))
             results.push(word);
     }
-    return results;
+    return results.sort();
 }
 
 /******************************************************************************
@@ -270,5 +270,6 @@ function previousCell(cell) {
 window.Wordle = {
     createGrid,
     getGrid,
-    scoreGuess
+    scoreGuess,
+    solve
 };
