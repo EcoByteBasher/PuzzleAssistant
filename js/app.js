@@ -47,28 +47,13 @@ function updateHint(){
     }
 }
 
-function updateModeUI(){
+function showCurrentMode() {
 
     const wordle = getMode() === "wordle";
 
     input.style.display = wordle ? "none" : "";
     chips.style.display = wordle ? "none" : "";
-    wordlePanel.style.display = wordle ? "" : "none";
-
-    if(wordle){
-
-        button.disabled = false;
-
-        const first =
-            document.querySelector(".wordleCell");
-
-        if(first) first.focus();
-
-    }else{
-
-        updateUI();
-
-    }
+    wordlePanel.style.display = wordle ? "block" : "none";
 }
 
       function setValidityAndButton(){
@@ -133,14 +118,14 @@ function updateModeUI(){
           input.value = '';
           UI.clearResults();
           updateHint();
-          updateModeUI();
+          showCurrentMode();
         });
       });
 
       // init
       Wordle.createGrid();
+      showCurrentMode();
       updateHint();
       input.value = '';
-      updateModeUI();
     })();
 

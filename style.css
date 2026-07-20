@@ -8,6 +8,9 @@
       --ok: #21d07a;
       --border: rgba(255,255,255,0.12);
       --shadow: 0 10px 30px rgba(0,0,0,.35);
+--wordle-grey:#787c7e;
+--wordle-yellow:#c9b458;
+--wordle-green:#6aaa64;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -31,29 +34,64 @@
     }
 
     /* Fancy toggle */
-    .toggle-wrapper{
-      display:flex;justify-content:center;margin-bottom:1rem;
-    }
-    .toggle{
-      position:relative;width:260px;height:46px;
-      background:var(--card);border:1px solid var(--border);
-      border-radius:30px;box-shadow:inset 0 2px 5px rgba(0,0,0,.4);
-      display:flex;align-items:center;justify-content:space-between;
-      overflow:hidden;
-    }
-    .toggle input{display:none}
-    .toggle label{
-      flex:1;text-align:center;cursor:pointer;z-index:2;
-      font-weight:600;color:var(--muted);user-select:none;
-    }
-    .toggle input:checked + label{color:#fff}
-    .toggle .slider{
-      position:absolute;top:3px;bottom:3px;left:3px;
-      width:calc(50% - 3px);border-radius:30px;
-      background:var(--accent);transition:.3s;
-      z-index:1;
-    }
-    #finder:checked ~ .slider{transform:translateX(100%)}
+
+.toggle-wrapper{
+    display:flex;
+    justify-content:center;
+    margin-bottom:1rem;
+}
+
+.toggle{
+    position:relative;
+    width:390px;
+    height:46px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:30px;
+    box-shadow:inset 0 2px 5px rgba(0,0,0,.4);
+    display:flex;
+    overflow:hidden;
+}
+
+.toggle input{
+    display:none;
+}
+
+.toggle label{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    user-select:none;
+    z-index:2;
+    font-weight:600;
+    color:var(--muted);
+}
+
+.toggle input:checked + label{
+    color:white;
+}
+
+.toggle .slider{
+    position:absolute;
+    top:3px;
+    bottom:3px;
+    left:3px;
+    width:calc((100% - 6px)/3);
+    border-radius:30px;
+    background:var(--accent);
+    transition:transform .3s ease;
+    z-index:1;
+}
+
+#finder:checked ~ .slider{
+    transform:translateX(100%);
+}
+
+#wordle:checked ~ .slider{
+    transform:translateX(200%);
+}
 
     input{
       font-size:1.5rem;padding:.5rem;letter-spacing:.2rem;text-transform:uppercase;
@@ -81,4 +119,45 @@
     }
     .chip.letter{background:var(--ok);color:#fff}
     .chip.wild{background:var(--danger);color:#fff}
+
+/* ---------- WORDLE ---------- */
+
+#wordlePanel{
+    display:none;
+    width:100%;
+    margin-top:1rem;
+}
+
+.wordleGrid{
+    display:grid;
+    grid-template-columns:repeat(5,56px);
+    gap:6px;
+    justify-content:center;
+}
+
+.wordleCell{
+    width:56px;
+    height:56px;
+    border:2px solid rgba(255,255,255,.15);
+    border-radius:6px;
+    text-align:center;
+    font-size:28px;
+    font-weight:bold;
+    text-transform:uppercase;
+    color:white;
+    background:var(--wordle-grey);
+    outline:none;
+}
+
+.wordleCell.grey{
+    background:var(--wordle-grey);
+}
+
+.wordleCell.yellow{
+    background:var(--wordle-yellow);
+}
+
+.wordleCell.green{
+    background:var(--wordle-green);
+}
 
