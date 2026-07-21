@@ -47,15 +47,15 @@ function showCurrentMode() {
 
     const wordle = getMode() === "wordle";
 
-    input.style.display        = wordle ? "none" : "";
-    chips.style.display        = wordle ? "none" : "";
-    wordlePanel.style.display  = wordle ? "block" : "none";
+    input.style.display       = wordle ? "none" : "";
+    chips.style.display       = wordle ? "none" : "";
+    wordlePanel.style.display = wordle ? "block" : "none";
 
-    const cells = document.querySelectorAll(".wordleCell");
-
-    const target = [...cells].find(c => c.value === "") ?? cells[0];
-
-    target.focus();
+    if (wordle) {
+        const cells = document.querySelectorAll(".wordleCell");
+        const target = [...cells].find(c => c.value === "") ?? cells[0];
+        target.focus();
+    }
 }
 
       function setValidityAndButton(){
