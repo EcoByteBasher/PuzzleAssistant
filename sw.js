@@ -1,11 +1,17 @@
 const CACHE_NAME = "pa-cache-v1";
 const ASSETS = [
   "index.html",
+  "style.css",
   "manifest.json",
   "icon-192x192.png",
   "icon-512x512.png",
   "dictionarylist.js",
-  "dictionarymap.js"
+  "dictionarymap.js",
+  "src/app.js",
+  "src/anagram.js",
+  "src/finder.js",
+  "src/ui.js",
+  "src/wordle.js"
 ];
 
 // Install service worker and cache assets
