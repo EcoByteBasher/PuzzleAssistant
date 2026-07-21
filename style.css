@@ -160,3 +160,12 @@
     background:var(--wordle-green);
 }
 
+.app-footer {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: center;
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+    width: 100%;
+}

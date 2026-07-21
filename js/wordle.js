@@ -128,10 +128,14 @@ function solve() {
 
 function scoreGuess(guess, answer) {
 
+    const ABSENT  = 0; // Score definitions
+    const PRESENT = 1;
+    const CORRECT = 2;
+
     guess = guess.toUpperCase();
     answer = answer.toUpperCase();
 
-    const score = [0, 0, 0, 0, 0];
+    const score = [ABSENT, ABSENT, ABSENT, ABSENT, ABSENT];
     const used = [false, false, false, false, false];
 
     // Pass 1 - Greens
@@ -139,7 +143,7 @@ function scoreGuess(guess, answer) {
 
         if (guess[i] === answer[i]) {
 
-            score[i] = 2;
+            score[i] = CORRECT;
             used[i] = true;
         }
     }
@@ -147,7 +151,7 @@ function scoreGuess(guess, answer) {
     // Pass 2 - Yellows
     for (let i = 0; i < 5; i++) {
 
-        if (score[i] !== 0)
+        if (score[i] !== ABSENT)
             continue;
 
         for (let j = 0; j < 5; j++) {
@@ -158,7 +162,7 @@ function scoreGuess(guess, answer) {
             if (guess[i] !== answer[j])
                 continue;
 
-            score[i] = 1;
+            score[i] = PRESENT;
             used[j] = true;
             break;
         }
@@ -289,6 +293,7 @@ function previousCell(cell) {
 window.Wordle = {
     createGrid,
     getGrid,
+    matchesGrid,
     scoreGuess,
     solve,
     canSolve

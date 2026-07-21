@@ -1,15 +1,11 @@
-    let appVersion = 'unknown';
-
-    // Load version from manifest
-    fetch('manifest.json')
-      .then(res => res.json())
-      .then(manifest => {
-        appVersion = manifest.version || 'unknown';
-        document.getElementById('app-version').textContent = `v${appVersion}`;
-      })
-      .catch(() => {
-        document.getElementById('app-version').textContent = `(${appVersion})`;
-      });
+    document.getElementById("app-name").textContent = APP_NAME;
+    document.title = APP_NAME;
+    document.getElementById('app-version').textContent = `Version ${APP_VERSION}`;
+/*
+    document.getElementById("app-footer").textContent =
+        `${APP_NAME} v${APP_VERSION} • ${APP_COPYRIGHT}`;
+*/
+    document.getElementById("app-footer").textContent = `${APP_NAME} • ${APP_COPYRIGHT}`;
 
     (function(){
       const input = document.getElementById('letters');
@@ -42,7 +38,7 @@ function updateHint(){
 
         case "wordle":
             hint.textContent =
-                "Enter your guesses, then double-click squares to change Grey → Yellow → Green.";
+                "Enter your guesses, then double-click squares to change Grey → Yellow → Green. Incomplete rows will be ignored.";
             break;
     }
 }
