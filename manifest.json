@@ -1,8 +1,8 @@
 {
-  "name": "Crossword Assistant",
-  "short_name": "Crossword Assistant",
-  "description": "Anagram solver & word finder.",
-  "version": "1.2.0",
+  "name": "Puzzle Assistant",
+  "short_name": "Puzzle Assistant",
+  "description": "Anagram solver, word finder and Wordle helper.",
+  "version": "1.0.0",
   "start_url": "index.html",
   "display": "standalone",
   "theme_color": "#0d6efd",

@@ -1,10 +1,11 @@
-# CrosswordAssistant
-# Crossword Assistant - README
+# PuzzleAssistant
+# Puzzle Assistant - README
 
-This project provides a self-contained HTML/JS webpage that works as a Crossword Assistant.  
-It has two modes:
+This project provides a self-contained HTML/JS webpage that works as a Puzzle Assistant.  
+It has three modes:
 - **Anagram Mode**: Find anagrams of 3–15 letters.
 - **Word Finder Mode**: Find words that match a pattern with known letters and wildcards (wildcards entered with SPACE).
+- **Wordle Helper Mode**: Find possible solutions to a Wordle grid.
 
 ## Files
 
@@ -22,14 +23,14 @@ It has two modes:
    node make_dictionarymap.js dictionary.txt dictionarymap.js
    ```
 
-3. Generate `dictionarylist.js` for **Word Finder Mode**:  
+3. Generate `dictionarylist.js` for **Word Finder & Wordle Modes**:  
    ```bash
    node make_dictionarylist.js dictionary.txt dictionarylist.js
    ```
 
 4. Place all three files (`index.html`, `dictionarymap.js`, `dictionarylist.js`) in the same directory.
 
-5. Open `crossword.html` directly in your browser.
+5. Open `index.html` directly in your browser.
 
 ## Usage
 
@@ -41,3 +42,8 @@ It has two modes:
   Example: `C??T??` will find words like *CARTON*, *COSTLY*, etc.  
   Solve is enabled as soon as you have typed at least one wildcard character.  
   
+- **Wordle Helper Mode**  
+  Enter grid as per standard puzzle.  
+  Double-click to turn cells yellow, and again to turn them green.  
+  Solve is enabled as soon as you have at least one complete row.  
+
