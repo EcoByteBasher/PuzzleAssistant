@@ -55,10 +55,11 @@ function showCurrentMode() {
     chips.style.display        = wordle ? "none" : "";
     wordlePanel.style.display  = wordle ? "block" : "none";
 
-    const first = document.querySelector(".wordleCell");
+    const cells = document.querySelectorAll(".wordleCell");
 
-    if (first)
-        first.focus();
+    const target = [...cells].find(c => c.value === "") ?? cells[0];
+
+    target.focus();
 }
 
       function setValidityAndButton(){
@@ -141,6 +142,7 @@ function showCurrentMode() {
           UI.clearResults();
           updateHint();
           showCurrentMode();
+          updateUI();
         });
       });
 
@@ -151,6 +153,7 @@ function showCurrentMode() {
       });
       showCurrentMode();
       updateHint();
+      updateUI();
       input.value = '';
     })();
 

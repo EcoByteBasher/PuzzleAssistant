@@ -46,4 +46,4 @@ It has three modes:
   Enter grid as per standard puzzle.  
   Double-click to turn cells yellow, and again to turn them green.  
   Solve is enabled as soon as you have at least one complete row.  
-
+  NB - Incomplete rows will be ignored.  

@@ -11,7 +11,7 @@
 let lastClickedCell = null;
 let lastClickTime = 0;
 
-const DOUBLE_CLICK_MS = 350;
+const DOUBLE_CLICK_MS = 300;
 
 function createGrid() {
 
