@@ -28,17 +28,17 @@ function updateHint(){
 
         case "anagram":
             hint.textContent =
-                "Anagram: Enter 3–15 letters. Solve enables at 3+ letters.";
+                "Enter 3–15 letters. Solve enables at 3+ letters.";
             break;
 
         case "finder":
             hint.textContent =
-                "Word Finder: Enter letters, or SPACE for wildcard '?'.";
+                "Enter 1-15 letters, or SPACE for wildcard '?'.";
             break;
 
         case "wordle":
             hint.textContent =
-                "Enter your guesses. Double-click to change Grey → Yellow → Green. Complete rows only.";
+                "Enter complete rows. Double-click to change colour.";
             break;
     }
 }
