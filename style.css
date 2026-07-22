@@ -22,13 +22,13 @@
     *{box-sizing:border-box}
     html{height:100%}
     body{
-      margin:0;min-height:100dvh;display:flex;align-items:center;justify-content:center;
+      margin:0;min-height:100dvh;display:flex;align-items:flex-start;justify-content:center;
       padding:1rem 0;background:var(--bg);color:var(--text);font-family:sans-serif
     }
     main{
       padding:2rem;max-width:700px;width:95%;
       background:var(--card);border-radius:1rem;box-shadow:var(--shadow);
-      display:flex;flex-direction:column;align-items:center
+      display:flex;flex-direction:column;align-items:center;margin: 1rem 0;
     }
     h1{margin:0 0 .5rem 0;text-align:center}
     .subtitle{color:var(--muted);text-align:center;margin:0 0 1rem 0}
